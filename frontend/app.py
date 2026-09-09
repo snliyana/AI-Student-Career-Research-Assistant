@@ -19,7 +19,7 @@ st.set_page_config(
 # API CONFIGURATION
 # =========================================================
 
-BASE_API_URL = "http://127.0.0.1:8000"
+BASE_API_URL = "https://ai-student-career-research-assistant.onrender.com"
 CHAT_API_URL = f"{BASE_API_URL}/chat"
 
 
