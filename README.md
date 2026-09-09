@@ -135,7 +135,7 @@ Possible use cases include:
 
 ## 🏗️ System Architecture
 
-![System Architecture](assets/architecture.png)
+![System Architecture](assets/screenshots/architecture.png)
 
 The main application flow is:
 
