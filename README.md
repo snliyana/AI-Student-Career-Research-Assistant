@@ -6,6 +6,16 @@ The application is built using **LangGraph**, **LangChain**, **Groq LLM**, **Fas
 
 ---
 
+## 🌐 Live Demo
+
+🚀 **Try the application here:**
+
+[Open AI Student Career & Research Assistant](https://ai-student-career-assistant.streamlit.app)
+
+> The live application uses a Streamlit frontend with a FastAPI backend and Groq LLM. Availability may be affected by API usage limits or free-tier hosting.
+
+---
+
 ## 📌 Project Overview
 
 Students often need information from multiple sources when planning their careers, such as:
