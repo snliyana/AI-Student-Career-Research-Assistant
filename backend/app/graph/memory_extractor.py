@@ -12,6 +12,7 @@ from backend.app.memory.long_term_memory import save_memory
 # --------------------------------
 
 class MemorySchema(BaseModel):
+
     career_goal: Optional[str] = Field(
         default=None,
         description="The user's career goal or desired role."
@@ -33,23 +34,31 @@ class MemorySchema(BaseModel):
     )
 
 
-memory_llm = llm_groq.with_structured_output(MemorySchema)
+memory_llm = llm_groq.with_structured_output(
+    MemorySchema
+)
 
 
 # --------------------------------
 # Memory Extractor Node
 # --------------------------------
 
-def memory_extractor_node(state: GraphState) -> GraphState:
+def memory_extractor_node(
+    state: GraphState
+) -> GraphState:
 
     user_query = state["query"]
-    user_id = state.get("user_id", "default_user")
+
+    user_id = state.get(
+        "user_id",
+        "default_user"
+    )
 
     prompt = f"""
 You are a memory extraction assistant.
 
-Extract only stable and useful personal preferences or career-related
-facts from the user's message.
+Extract ONLY stable and useful personal preferences
+or career-related facts explicitly stated by the user.
 
 User message:
 {user_query}
@@ -63,37 +72,64 @@ Possible memories:
 Rules:
 - Do not guess.
 - If a fact is not explicitly stated, return null.
-- Do not store temporary questions or general research topics.
+- Do not store temporary questions.
+- Do not store calculations.
+- Do not store weather queries.
+- Do not store stock queries.
+- Do not store general research questions.
+- Return only information matching the structured schema.
 """
 
-    memory = memory_llm.invoke(prompt)
+    try:
+
+        memory = memory_llm.invoke(
+            prompt
+        )
+
+    except Exception as e:
+
+        # Memory extraction should never crash the whole app.
+        print(
+            f"Memory extraction skipped: {e}"
+        )
+
+        return state
+
 
     if memory.career_goal:
+
         save_memory(
             user_id,
             "career_goal",
             memory.career_goal
         )
 
+
     if memory.learning_style:
+
         save_memory(
             user_id,
             "learning_style",
             memory.learning_style
         )
 
+
     if memory.preferred_location:
+
         save_memory(
             user_id,
             "preferred_location",
             memory.preferred_location
         )
 
+
     if memory.preferred_industry:
+
         save_memory(
             user_id,
             "preferred_industry",
             memory.preferred_industry
         )
+
 
     return state
